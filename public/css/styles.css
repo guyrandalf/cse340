@@ -72,7 +72,7 @@ nav a {
   top: 220px;
   font-weight: 600;
   line-height: 0;
-  color: #b45773;
+  color: #7f57b4;
   padding: 20px 10px;
 }
 
@@ -87,6 +87,7 @@ nav a {
 
 #overlay-content p {
   font-size: 18px;
+  color: #1a1a1a;
 }
 
 #info {
@@ -99,7 +100,7 @@ nav a {
   line-height: 2;  
 }
 
-#reviews h2 {
+#reviews h2, #upgrades h2 {
   font-size: 32px;
 }
 
@@ -117,15 +118,16 @@ nav a {
 }
 
 #item-image {
-  background-color: #b45773;
+  background-color: #7f57b4;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  /* gap: 10px; */
   margin: 10px;
   padding: 20px;
-  max-height: 100px;
+  min-height: 150px;
+  width: auto;
 }
 
 #item a {    
@@ -133,4 +135,37 @@ nav a {
   font-size: 18px;  
   display: flex;  
   justify-content: center;
+}
+
+@media screen and (min-width: 960px) {
+  body {
+    background-image: url('../images/site/checkerboard.jpg');    
+  }
+  
+  body, #wrapper {
+    margin: 20px 80px;
+    background-color: #ffffff;
+  }
+
+  #info {
+    flex-direction: row;
+  }
+
+  #item-image {
+    width: 200px;
+  }
+
+  #wrapper {
+    border-radius: 10px;
+    border: 5px solid #7f57b4;
+    padding: 10px;
+  }
+
+  #overlay {    
+    max-width: 460px;
+  }
+
+  #overlay-content {
+    top: 260px;
+  }
 }
