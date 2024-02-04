@@ -74,4 +74,64 @@ Util.buildClassificationGrid = async function (data) {
   return grid;
 };
 
+/* **************************************
+ * Build the single vehicle view HTML
+ * ************************************ */
+Util.buildVehicleGrid = async function (data) {
+  let grid;
+  let vehicle = data[0];
+  if (data) {
+    // open single vehicle view wrapper
+    grid = '<div id="singleVehicleWrapper">';
+    // image with alt
+    grid +=
+      '<img src="' +
+      vehicle.inv_image +
+      '" alt="Image of ' +
+      vehicle.inv_year +
+      vehicle.inv_make +
+      vehicle.inv_model +
+      '">';
+    // open unordered list for vehicle data
+    grid += '<ul id="singleVehicleDetails">';
+    // vehicle subtitle
+    grid +=
+      "<li><h2>" +
+      vehicle.inv_make +
+      " " +
+      vehicle.inv_model +
+      " Details</h2></li>";
+    // formatted vehicle price
+    grid +=
+      "<li><strong>Price: </strong>$" +
+      new Intl.NumberFormat("en-US").format(vehicle.inv_price) +
+      "</li>";
+    // vehicle description
+    grid +=
+      "<li><strong>Description: </strong>" + vehicle.inv_description + "</li>";
+    // vehicle miles
+    grid +=
+      "<li><strong>Miles: </strong>" +
+      new Intl.NumberFormat("en-US").format(vehicle.inv_miles) +
+      "</li>";
+    // close unordered list for vehicle data
+    grid += "</ul>";
+    // close single vehicle view wrapper
+    grid += "</div>";
+  } else {
+    grid += '<p class="notice">Sorry, no matching vehicle could be found.</p>';
+  }
+  return grid;
+};
+
+Util.buildBrokenPage = function() {
+  let broken = "";
+  return broken;
+};
+
+/* ***************************
+ * Middleware for handling errors
+ **************************/
+Util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
+
 module.exports = Util;

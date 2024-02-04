@@ -142,6 +142,32 @@ nav a {
   justify-content: center;
 }
 
+#singleVehicleWrapper {
+  display: grid;
+}
+#singleVehicleWrapper img {
+  width: 99%;
+  margin: auto;
+}
+#singleVehicleDetails {
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  list-style: none;
+  padding: 0;
+}
+#singleVehicleDetails li:nth-child(even) {
+  background-color: gainsboro;
+}
+#singleVehicleDetails li h2 {
+  font-size: 1.2em;
+  margin: 0;
+  padding: 0;
+}
+#singleVehicleDetails li {
+  font-size: 1.2em;
+  padding: .8em;
+  border-radius: .5em;
+}
+
 @media screen and (min-width: 960px) {
   body {
     background-image: url('../images/site/checkerboard.jpg');    
@@ -172,5 +198,32 @@ nav a {
 
   #overlay-content {
     top: 260px;
+  }
+
+  #inv-display {
+    grid-template-columns: 1fr 1fr;
+    justify-items: center;
+  }
+  #inv-display li {
+    width: 25em;
+  }
+
+  /* single car view */
+  #singleVehicleWrapper {
+    grid-template-columns: 1fr 1fr;
+  }
+  #singleVehicleWrapper img {
+    width: auto;
+    max-height: 14em;
+  }
+}
+
+@media screen and (min-width: 1700px) {
+  #inv-display {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  #singleVehicleWrapper img {
+    width: auto;
+    max-height: 25em;
   }
 }
