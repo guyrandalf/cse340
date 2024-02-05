@@ -111,7 +111,7 @@ Util.buildVehicleGrid = async function (data) {
       "<li><strong>Description: </strong>" + vehicle.inv_description + "</li>";
     // vehicle miles
     grid +=
-      "<li><strong>Miles: </strong>" +
+      "<li><strong>Mileage: </strong>" +
       new Intl.NumberFormat("en-US").format(vehicle.inv_miles) +
       "</li>";
     // close unordered list for vehicle data
