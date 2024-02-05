@@ -87,9 +87,9 @@ Util.buildVehicleGrid = async function (data) {
     grid +=
       '<img src="' +
       vehicle.inv_image +
-      '" alt="Image of ' +
-      vehicle.inv_year +
-      vehicle.inv_make +
+      '" alt="image of ' +
+      vehicle.inv_year + ' ' +
+      vehicle.inv_make + ' ' +
       vehicle.inv_model +
       '">';
     // open unordered list for vehicle data
