@@ -56,7 +56,13 @@ app.set("layout", "./layouts/layout"); // not a views root
 app.use(static);
 
 // Route to deliver index
-app.get("/", utilities.handleErrors(baseController.buildHome));
+app.get("/", async (req, res, next) => {
+  try {
+    await utilities.handleErrors(baseController.buildHome)(req, res, next);
+  } catch (error) {
+    next(error);
+  }
+});
 
 app.use("/inv", inventoryRoute);
 
