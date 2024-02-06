@@ -1,0 +1,28 @@
+<% if (title) { %>
+    <h1>
+        <%= title %>
+    </h1>
+    <% } else { res.redirect('/') } %>
+        
+    <%- messages() %>
+
+        <!-- display errors -->
+        <% if (errors) { %>
+            <ul class="notice">
+                <% errors.array().forEach(error=> { %>
+                    <li>
+                        <%= error.msg %>
+                    </li>
+                    <% }) %>
+            </ul>
+    <% } %>
+<form class="form addclass-form" method="post">    
+    <fieldset class="form--fieldset addclass-form--fieldset">
+        <h1>Add a new Classification</h1>
+    <label for="classification_name">Classification Name: </label>
+        <input type="text" id="classification_name" name="classification_name" placeholder="Enter new classification" value="<%= locals.classification_name %>" pattern="^[a-zA-Z]+$" autofocus required>
+        <p>Field can only contain alphabetic characters, and a minimum of 3 characters.</p>
+
+    <button type="submit">Add</button>
+</fieldset>
+</form>

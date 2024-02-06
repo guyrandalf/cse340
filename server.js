@@ -9,10 +9,39 @@ const express = require("express");
 const expressLayouts = require("express-ejs-layouts");
 const dotenv = require("dotenv").config();
 const app = express();
+const bodyParser = require("body-parser");
 const static = require("./routes/static");
-const inventoryRoute = require("./routes/inventoryRoutes")
-const baseController = require("./controllers/baseController")
-const utilities = require("./utilities")
+const inventoryRoute = require("./routes/inventoryRoutes");
+const baseController = require("./controllers/baseController");
+const utilities = require("./utilities");
+const session = require("express-session");
+const pool = require("./database");
+
+/* ***********************
+ * Middlewares (Session, Express Messages)
+ *************************/
+
+app
+  .use(
+    session({
+      store: new (require("connect-pg-simple")(session))({
+        createTableIfMissing: true,
+        pool,
+      }),
+      secret: process.env.SESSION_SECRET,
+      resave: true,
+      saveUninitialized: true,
+      name: "sessionId",
+    })
+  )
+  .use(require("connect-flash")())
+  .use(function (req, res, next) {
+    res.locals.messages = require("express-messages")(req, res);
+    next();
+  });
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 /* ***********************
  * View Engine and Templates
@@ -27,31 +56,36 @@ app.set("layout", "./layouts/layout"); // not a views root
 app.use(static);
 
 // Route to deliver index
-app.get("/", utilities.handleErrors(baseController.buildHome))
+app.get("/", utilities.handleErrors(baseController.buildHome));
 
-app.use("/inv", inventoryRoute)
+app.use("/inv", inventoryRoute);
 
 // FIle not found
 app.use(async (req, res, next) => {
   next({
-    status: 404, 
-    message: 'This is not the page you are looking for.'
-  })
-})
+    status: 404,
+    message: "This is not the page you are looking for.",
+  });
+});
 
 /* ***********************
-* Express Error Handler
-*************************/
+ * Express Error Handler
+ *************************/
 app.use(async (err, req, res, next) => {
-  let nav = await utilities.getNav()
-  console.error(`Error at: "${req.originalUrl}": ${err.message}`)
-  if(err.status == 404) {message = err.message} else {message = 'Oops, looks like something went wrong! Maybe try a different route?'}
+  let nav = await utilities.getNav();
+  console.error(`Error at: "${req.originalUrl}": ${err.message}`);
+  if (err.status == 404) {
+    message = err.message;
+  } else {
+    message =
+      "Oops, looks like something went wrong! Maybe try a different route?";
+  }
   res.render("errors/error", {
-    title: err.status || '500 Server Error',
+    title: err.status || "500 Server Error",
     message,
     nav,
-  })
-})
+  });
+});
 
 /* ***********************
  * Local Server Information

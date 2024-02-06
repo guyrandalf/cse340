@@ -1,3 +1,4 @@
+const {selectedFields} = require("express-validator/src/field-selection")
 const invModel = require("../models/inventory-model");
 const Util = {};
 
@@ -128,6 +129,21 @@ Util.buildBrokenPage = function() {
   let broken = "";
   return broken;
 };
+
+/* ************************
+ * Constructs the nav HTML unordered list
+ ************************** */
+Util.classificationSelect = async function (req, res, next) {
+  let data = await invModel.getClassifications()
+  let list = '<select name="classification_id" id="classification_id">'
+  data.rows.forEach((row) => {
+    list += '<option value="' + row.classification_id + '">' 
+      + row.classification_name 
+    + '</option>'
+  })
+  list += '</select>'
+  return list
+}
 
 /* ***************************
  * Middleware for handling errors
