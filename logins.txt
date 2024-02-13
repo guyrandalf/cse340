@@ -1,0 +1,11 @@
+Admin
+Email: jill@gmail.com
+
+Employee
+Email: jane@gmail.com
+
+Client
+Email: john@gmail.com
+
+One Password:
+Randalf12345@
