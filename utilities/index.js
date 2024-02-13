@@ -1,5 +1,7 @@
-const {selectedFields} = require("express-validator/src/field-selection")
+const { selectedFields } = require("express-validator/src/field-selection");
 const invModel = require("../models/inventory-model");
+const dotenv = require("dotenv").config();
+const jwt = require("jsonwebtoken");
 const Util = {};
 
 Util.getNav = async function (req, res, next) {
@@ -89,8 +91,10 @@ Util.buildVehicleGrid = async function (data) {
       '<img src="' +
       vehicle.inv_image +
       '" alt="image of ' +
-      vehicle.inv_year + ' ' +
-      vehicle.inv_make + ' ' +
+      vehicle.inv_year +
+      " " +
+      vehicle.inv_make +
+      " " +
       vehicle.inv_model +
       '">';
     // open unordered list for vehicle data
@@ -125,7 +129,7 @@ Util.buildVehicleGrid = async function (data) {
   return grid;
 };
 
-Util.buildBrokenPage = function() {
+Util.buildBrokenPage = function () {
   let broken = "";
   return broken;
 };
@@ -133,21 +137,81 @@ Util.buildBrokenPage = function() {
 /* ************************
  * Constructs the nav HTML unordered list
  ************************** */
-Util.classificationSelect = async function (req, res, next) {
-  let data = await invModel.getClassifications()
-  let list = '<select name="classification_id" id="classification_id">'
+Util.classificationSelect = async function (selectedOption) {
+  let data = await invModel.getClassifications();
+  let options = `<option value="">Choose a classification</option>`;
   data.rows.forEach((row) => {
-    list += '<option value="' + row.classification_id + '">' 
-      + row.classification_name 
-    + '</option>'
-  })
-  list += '</select>'
-  return list
-}
+    options += `<option value="${row.classification_id}"
+      ${row.classification_id === Number(selectedOption) ? "selected" : ""}>
+      ${row.classification_name}
+      </option>`;
+  });
+  return options;
+};
 
 /* ***************************
  * Middleware for handling errors
  **************************/
-Util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
+Util.handleErrors = (fn) => (req, res, next) =>
+  Promise.resolve(fn(req, res, next)).catch(next);
+
+/* ****************************************
+ * Middleware to check token validity
+ **************************************** */
+Util.checkJWTToken = (req, res, next) => {
+  // if there is a token, verify it
+  if (req.cookies.jwt) {
+    // pass verify cookie and secret
+    // call back to check for errors
+    jwt.verify(
+      req.cookies.jwt,
+      process.env.ACCESS_TOKEN_SECRET,
+      function (err, accountData) {
+        if (err) {
+          req.flash("Please log in");
+          res.clearCookie("jwt");
+          return res.redirect("/account/login");
+        }
+        res.locals.accountData = accountData;
+        res.locals.loggedin = 1;
+        next();
+      }
+    );
+  } else {
+    next();
+  }
+};
+
+/* ****************************************
+ *  Check Login
+ * ************************************ */
+Util.checkLogin = (req, res, next) => {
+  if (res.locals.loggedin) {
+    next();
+  } else {
+    req.flash("notice", "Please log in.");
+    return res.redirect("/account/login");
+  }
+};
+
+/* ****************************************
+ *  Check user authorization, block unauthorized users
+ * ************************************ */
+Util.isAuthorized = async (req, res, next) => {
+  let auth = 0;  
+  if (res.locals.loggedin) {
+    const account = res.locals.accountData;
+    account.account_type == "Admin" || account.account_type == "Employee"
+      ? (auth = 1)
+      : (auth = 0);
+  }
+  if (!auth) {
+    req.flash("notice", "Please log in")
+    res.redirect("/account/login")
+    return;
+  } else {
+    next();
+  }
+};
 
 module.exports = Util;

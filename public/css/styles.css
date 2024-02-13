@@ -200,14 +200,19 @@ nav a {
 
 .management-links {
   padding: 1em;
+  margin-top: -2em;
+  margin-bottom: -2em;
   display: flex;
+  flex-direction: column;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
 }
 .management-links a {
-  padding: 1em;
+  padding: 0.6em;
   margin: 1em;
   text-decoration: none;
+  text-align: center;
+  font-size: 1.1em;
   color: black;
   border: 3px solid rgb(34, 95, 207);
   background-color: rgb(168, 197, 250);
@@ -267,11 +272,75 @@ select {
   padding: 10px 0;  
 }
 
+.form label {
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  margin-bottom: .1em;
+}
+
 .addvehicle-form p:first-child {
   text-align: center;
 }
 .addvehicle-form--fieldset button {
   margin-bottom: 1em;
+}
+
+/* EDITVEHICLE FORM */
+#updateBtn:disabled {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* DELETECONFIRM FORM */
+/* #deleteForm {
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+} */
+input[readonly] {
+  outline: none;
+  border: 3px solid rgb(34, 95, 207);
+}
+
+.manage-inventory p {
+  font-size: 1.1em;
+  margin-bottom: .6em;
+}
+.manage-inventory table {
+  border-collapse: collapse;
+  margin-left: 2em;
+  width: 70%;
+}
+.manage-inventory th {
+  text-align: left;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  padding: 0 1em;
+}
+.manage-inventory table td {
+  height: 50px;
+  min-width: 5em;
+  text-align: center;
+}
+.manage-inventory table tr td:first-child {
+  padding: 0 1em;
+  text-align: left;
+}
+.manage-inventory table tr td:nth-child(1n + 2) {
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-weight: 500;
+}
+.manage-inventory table tbody tr:nth-child(odd) {
+  border: 1.5px solid rgb(211, 211, 211);
+}
+.manage-inventory table tbody tr:nth-child(even) {
+  background-color: rgb(233, 233, 233);
+  border: 1.5px solid rgb(211, 211, 211);
+}
+
+.manage-inventory a {
+  text-decoration: none;
+  color: rgb(20, 66, 152);
+  transition: font-size .2s;
+}
+.manage-inventory a:hover {
+  font-size: 1.2em;
 }
 
 @media screen and (min-width: 960px) {
