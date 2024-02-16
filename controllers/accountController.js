@@ -1,4 +1,5 @@
 const accModel = require("../models/account-model");
+const msgModel = require("../models/message-model");
 const utilities = require("../utilities/");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -10,9 +11,11 @@ const dotenv = require("dotenv").config();
 
 async function buildRegister(req, res, next) {
   let nav = await utilities.getNav();
+  let newMsg = await msgModel.getNewMsgCount(res.locals.accountData.account_id);
   res.render("account/register", {
     title: "Register",
     nav,
+    newMsg,
     errors: null,
   });
 }
@@ -125,7 +128,7 @@ async function buildAccount(req, res, next) {
 async function buildEditAccount(req, res, next) {
   let nav = await utilities.getNav();
   let account = res.locals.accountData;
-  const account_id = parseInt(req.params.account_id);  
+  const account_id = parseInt(req.params.account_id);
   res.render("account/editaccount", {
     title: "Edit Account Information",
     nav,
@@ -160,10 +163,7 @@ async function editAccountInfo(req, res) {
     // can only be passed through http requests, maximum age is 1 hour
     res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 });
 
-    req.flash(
-      "success",
-      'Account information updated succesfully.'
-    );
+    req.flash("success", "Account information updated succesfully.");
     res.status(201).render("account/account", {
       title: "Edit Account Information",
       nav,
@@ -196,10 +196,7 @@ async function editAccountPassword(req, res) {
     // regular password and cost (salt is generated automatically)
     hashedPassword = await bcrypt.hashSync(account_password, 10);
   } catch (error) {
-    req.flash(
-      "notice",
-      "Sorry, an error occured."
-    );
+    req.flash("notice", "Sorry, an error occured.");
     res.status(500).render("account/editaccount", {
       title: "Registration",
       nav,
@@ -211,13 +208,10 @@ async function editAccountPassword(req, res) {
     hashedPassword,
     account_id
   );
-  // account account = res.locals.accountData  
+  // account account = res.locals.accountData
   if (regResult) {
     const account = await accountModel.getAccountById(account_id);
-    req.flash(
-      "success",
-      "Password was changed succesfully"
-    );
+    req.flash("success", "Password was changed succesfully");
     res.status(201).render("account/account", {
       title: "Edit Account Information",
       nav,

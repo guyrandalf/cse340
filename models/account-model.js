@@ -4,6 +4,12 @@ const pool = require("../database");
  * INSERT a new account detail
  */
 
+async function fetchAllAccounts() {
+  return await pool.query(
+    "SELECT * FROM public.account ORDER BY account_email"
+  );
+}
+
 async function registerAccount(
   account_firstname,
   account_lastname,
@@ -95,4 +101,5 @@ module.exports = {
   getAccountById,
   updateAccountInfo,
   changeAccountPassword,
+  fetchAllAccounts,
 };

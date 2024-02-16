@@ -290,10 +290,18 @@ select {
   color: rgba(255, 255, 255, 0.6);
 }
 
-/* DELETECONFIRM FORM */
-/* #deleteForm {
-  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-} */
+.bubble {
+  height: 12px;
+  width: 12px;
+  border-radius: 12px;
+}
+.false {
+  background-color: cornflowerblue;
+}
+.true {
+  border: 2px solid gray;
+}
+
 input[readonly] {
   outline: none;
   border: 3px solid rgb(34, 95, 207);

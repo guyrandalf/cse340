@@ -1,5 +1,7 @@
 const { selectedFields } = require("express-validator/src/field-selection");
+const accModel = require("../models/account-model")
 const invModel = require("../models/inventory-model");
+const msgModel = require("../models/message-model")
 const dotenv = require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const Util = {};
@@ -213,5 +215,82 @@ Util.isAuthorized = async (req, res, next) => {
     next();
   }
 };
+
+/* ************************
+ * Constructs the account HTML select options
+ ************************** */
+Util.getAccountSelect = async function (selectedOption) {
+  let data = await accModel.fetchAllAccounts()
+  let options = `<option value="">Select a Recipient</option>`
+  data.rows.forEach((row => {
+    options += 
+      `<option value="${row.account_id}"
+      ${row.account_id === Number(selectedOption) ? 'selected': ''}>
+      ${row.account_firstname} ${row.account_lastname}
+      </option>`
+  }))
+  return options
+}
+
+Util.getAccountMessages = async function (account_id) {
+  let data = await msgModel.getNewMsgCount(account_id)
+  let dataTable
+  if (data.rowCount === 0) {
+    dataTable = '<h3>No new messages</h3>'
+  } else {
+    dataTable = '<table id="inboxMessagesDisplay"><thead>'; 
+    dataTable += '<tr><th>Read</th><th>Recieved</th><th>Subject</th><th>From</th></tr>'; 
+    dataTable += '</thead>'; 
+    // Set up the table body 
+    dataTable += '<tbody>'; 
+    // Iterate over all messages in the array and put each in a row 
+    data.rows.forEach((row => { 
+      dataTable += `<tr><td><div class="bubble` 
+        if (row.message_read) {
+          dataTable += ` true"`
+        } else {
+          dataTable += ` false"`
+        }
+      dataTable += `></div></td>`; 
+      dataTable += `<td>${row.message_created.toLocaleString('en-US', 'narrow')}</td>`; 
+      dataTable += `<td><a href='/inbox/view/${row.message_id}' title='Click to view message'>${row.message_subject}</a></td>`;
+      dataTable += `<td>${row.account_firstname} ${row.account_lastname}</td></tr>`;
+    })) 
+    dataTable += '</tbody></table>'; 
+  }
+  return dataTable
+}
+
+/* ************************
+ * Constructs archived messages on account_id
+ ************************** */
+Util.getArchivedMessages = async function (account_id) {
+  let data = await msgModel.getArchivedMessagesByAccountId(account_id)
+  let dataTable
+  if (data.rowCount === 0) {
+    dataTable = '<h3>No archived messages</h3>'
+  } else {
+    dataTable = '<table id="inboxMessagesDisplay"><thead>'; 
+    dataTable += '<tr><th>Read</th><th>Recieved</th><th>Subject</th><th>From</th></tr>'; 
+    dataTable += '</thead>'; 
+    // Set up the table body 
+    dataTable += '<tbody>'; 
+    // Iterate over all messages in the array and put each in a row 
+    data.rows.forEach((row => {
+      dataTable += `<tr><td><div class="bubble` 
+        if (row.message_read) {
+          dataTable += ` true"`
+        } else {
+          dataTable += ` false"`
+        }
+      dataTable += `></div></td>`; 
+      dataTable += `<td>${row.message_created.toLocaleString('en-US', 'narrow')}</td>`;
+      dataTable += `<td><a href='/inbox/view/${row.message_id}' title='Click to view message'>${row.message_subject}</a></td>`;
+      dataTable += `<td>${row.account_firstname} ${row.account_lastname}</td></tr>`;
+    })) 
+    dataTable += '</tbody></table>'; 
+  }
+  return dataTable
+}
 
 module.exports = Util;

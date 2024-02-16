@@ -10,7 +10,7 @@ const expressLayouts = require("express-ejs-layouts");
 const dotenv = require("dotenv").config();
 const app = express();
 const bodyParser = require("body-parser");
-const cookieParser = require("cookie-parser")
+const cookieParser = require("cookie-parser");
 const static = require("./routes/static");
 const inventoryRoute = require("./routes/inventoryRoutes");
 const accountRoute = require("./routes/accountRoutes");
@@ -45,8 +45,8 @@ app
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(cookieParser())
-app.use(utilities.checkJWTToken)
+app.use(cookieParser());
+app.use(utilities.checkJWTToken);
 
 /* ***********************
  * View Engine and Templates
@@ -71,6 +71,7 @@ app.get("/", async (req, res, next) => {
 
 app.use("/inv", inventoryRoute);
 app.use("/account", accountRoute);
+app.use("/inbox", require("./routes/messageRoutes"));
 
 // FIle not found
 app.use(async (req, res, next) => {
